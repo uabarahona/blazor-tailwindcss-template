@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.3.21201.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.3.21201.13" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="NpmInstall" Inputs="$(MSBuildProjectDirectory)package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="PostScopedCssCompile" Inputs="@(_ScopedCss)" Outputs="@(_ScopedCssOutputs)" AfterTargets="_GenerateScopedCssFiles">
+    <Message Importance="high" Text="Executing 'postcss' on scoped css..." />
+    <Exec Command="npx postcss @(_ScopedCssOutputs, ' ') --replace" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
+  <!--
+  
+    <Target Name="PostStylesCssCompile" Inputs="@(_ScopedCss)" Outputs="@(_ScopedCssOutputs)" AfterTargets="_GenerateScopedCssFiles">
+    <Message Importance="high" Text="Executing 'postcss' on styles.css" />
+    <Exec Command="npx postcss " WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+  -->
+
+
+  <Target Name="PostStylesCssCompile" AfterTargets="CopyFilesToOutputDirectory">
+    <Message Importance="high" Text="Executing 'postcss' on styles.css" />
+    <Exec Command="npx postcss styles.css -o $(OutDir)wwwroot\styles.css --env production" WorkingDirectory="$(MSBuildProjectDirectory)" />    
+  </Target>
+  
+</Project>
