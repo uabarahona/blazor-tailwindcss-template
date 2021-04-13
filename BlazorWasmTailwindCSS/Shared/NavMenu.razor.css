@@ -3,60 +3,52 @@
 }
 
 .top-row {
-    height: 3.5rem;
+    @apply h-12;
     background-color: rgba(0,0,0,0.4);
 }
 
 .navbar-brand {
-    font-size: 1.1rem;
+    @apply text-lg;
 }
 
 .oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
+    @apply w-8 text-lg align-text-top;
     top: -2px;
 }
 
 .nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
+    @apply text-sm pb-2;
 }
 
     .nav-item:first-of-type {
-        padding-top: 1rem;
+        @apply pt-4;
     }
 
     .nav-item:last-of-type {
-        padding-bottom: 1rem;
+        @apply pb-4;
     }
 
     .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
+        @apply text-gray-400 rounded h-12 flex items-center leading-10;
     }
 
 .nav-item ::deep a.active {
     background-color: rgba(255,255,255,0.25);
-    color: white;
+    @apply text-white;
 }
 
 .nav-item ::deep a:hover {
     background-color: rgba(255,255,255,0.1);
-    color: white;
+    @apply text-white;
 }
 
 @media (min-width: 641px) {
     .navbar-toggler {
-        display: none;
+        @apply hidden;
     }
 
     .collapse {
         /* Never collapse the sidebar for wide screens */
-        display: block;
+        @apply block;
     }
 }

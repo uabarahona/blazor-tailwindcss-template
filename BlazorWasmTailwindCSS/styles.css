@@ -1,4 +1,6 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿/* Add application styles & imports to this file! */
+
+@import url('css/open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 @tailwind base;
 @tailwind components;
@@ -9,17 +11,15 @@ html, body {
 }
 
 a, .btn-link {
-    color: #0366d6;
+    @apply text-blue-500;
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    @apply text-white bg-blue-500 border-blue-700;
 }
 
 .content {
-    padding-top: 1.2rem;
+    @apply p-5;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -31,24 +31,14 @@ a, .btn-link {
 }
 
 .validation-message {
-    color: red;
+    @apply text-red-600;
 }
 
 #blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
+    @apply bg-yellow-200 bottom-0 left-0 shadow fixed w-full;
+    @apply hidden z-50 pt-2.5 pr-5 pb-3 pl-5;
 }
 
     #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+        @apply cursor-pointer absolute right-3 top-2;
     }
