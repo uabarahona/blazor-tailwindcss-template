@@ -15,19 +15,12 @@
   
   <ItemGroup>
     <styles Include="styles.css" />
+    <Watch Include="@(styles)" />
   </ItemGroup>
 
   <!--
   WARNING:  DO NOT MODIFY the content below unless you are knowledgeable about MSBuild
    -->
-
-  <PropertyGroup Condition="'$(Configuration)' != 'Release'">
-    <environment>development</environment>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <environment>production</environment>
-  </PropertyGroup>
 
   <Target Name="NpmInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
@@ -37,11 +30,11 @@
 
   <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="NpmInstall">
     <Message Importance="high" Text="Building scoped css..." />
-    <Exec Command="npx postcss @(_ScopedCssOutputs, ' ') --replace" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="npx postcss @(_ScopedCssOutputs, ' ') --replace" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
   </Target>
 
   <Target Name="PostStylesCssCompile" Inputs="@(styles)" Outputs="@(styles->'$(OutDir)wwwroot\%(Identity)')" BeforeTargets="CoreBuild">
     <Message Importance="high" Text="Building sytles css" />
-    <Exec Command="npx postcss @(styles, ' ') --base . --dir $(OutDir)wwwroot --env $(environment)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="npx postcss @(styles, ' ') --base . --dir $(OutDir)wwwroot" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
   </Target>
 </Project>
