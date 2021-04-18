@@ -15,6 +15,7 @@
 - [x] `<styles>` gets compiled and copied over `wwwroot` without unused styles when release mode
 - [ ] change tailwindcss to use JIT compiler
 - [ ] only changed files gets re-compiled
+- [ ] Remove all references to bootstrap
 - [ ] convert template to a real dotnet template
 - [ ] create nuget package to add tailwindcss support for already created projects
 - [ ] improve performance and make compilation faster
