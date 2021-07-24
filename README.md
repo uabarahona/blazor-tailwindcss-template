@@ -14,8 +14,8 @@
 - [x] hot-reload considers tailwind compilation
 - [x] `<styles>` gets compiled and copied over `wwwroot` without unused styles when release mode
 - [x] change tailwindcss to use JIT compiler
-- [ ] only changed files gets re-compiled
-- [ ] make true hot-reload work on `sytles.css`
+- [x] only changed files gets re-compiled
+- [x] make true hot-reload work on `sytles.css`
 - [ ] Remove all references to bootstrap
 - [ ] convert template to a real dotnet template
 - [ ] create nuget package to add tailwindcss support for already created projects

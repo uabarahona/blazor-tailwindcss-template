@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31025.218
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmTailwindCSS", "BlazorWasmTailwindCSS\BlazorWasmTailwindCSS.csproj", "{CDD1D2FA-6C12-4B57-87D5-87FA4901F8A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebassembly", "BlazorWebassembly\BlazorWebassembly.csproj", "{58997925-076D-463D-8D22-DDDA134B7D17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CDD1D2FA-6C12-4B57-87D5-87FA4901F8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDD1D2FA-6C12-4B57-87D5-87FA4901F8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDD1D2FA-6C12-4B57-87D5-87FA4901F8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDD1D2FA-6C12-4B57-87D5-87FA4901F8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58997925-076D-463D-8D22-DDDA134B7D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58997925-076D-463D-8D22-DDDA134B7D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58997925-076D-463D-8D22-DDDA134B7D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58997925-076D-463D-8D22-DDDA134B7D17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {793E61F6-9D8F-4B0B-B7AF-9045F493AC20}
+		SolutionGuid = {5332B9CC-7B4E-4E40-921A-35A362E35F5A}
 	EndGlobalSection
 EndGlobal
