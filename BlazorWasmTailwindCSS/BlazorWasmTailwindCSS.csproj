@@ -5,36 +5,63 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.3.21201.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.3.21201.13" PrivateAssets="all" />
-  </ItemGroup>
-
-  <!--
-  Add any file you want to be included in wwwroot as a <styles> tag below
-  -->
-  
-  <ItemGroup>
     <styles Include="styles.css" />
-    <Watch Include="@(styles)" />
+    <Watch Include="$(OutDir)wwwroot\styles.css" StaticWebAssetPath="$(OutDir)wwwroot\styles.css" />
   </ItemGroup>
 
-  <!--
-  WARNING:  DO NOT MODIFY the content below unless you are knowledgeable about MSBuild
-   -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.6.21355.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.6.21355.2" PrivateAssets="all" />
+  </ItemGroup>
 
   <Target Name="NpmInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
-    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take serveral minutes..." />
     <Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="NpmInstall">
     <Message Importance="high" Text="Building scoped css..." />
-    <Exec Command="npx postcss @(_ScopedCssOutputs, ' ') --replace" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
+    <Exec Command="npx postcss %22@(_ScopedCssOutputs, '%22 %22')%22 --replace" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
   </Target>
 
-  <Target Name="PostStylesCssCompile" Inputs="@(styles)" Outputs="@(styles->'$(OutDir)wwwroot\%(Identity)')" BeforeTargets="CoreBuild">
+  <Target Name="PostStylesCssCompile" AfterTargets="Build">
     <Message Importance="high" Text="Building sytles css" />
-    <Exec Command="npx postcss @(styles, ' ') --base . --dir $(OutDir)wwwroot" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
+    <ExecAsync  Command="npx" Arguments="postcss @(styles, ' ') --base . --dir $(OutDir)wwwroot --watch --verbose --poll" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="watch" />
   </Target>
+
+  <UsingTask
+    TaskName="ExecAsync"
+    TaskFactory="RoslynCodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <Command ParameterType="System.String" Required="true" />
+      <Arguments ParameterType="System.String" Required="true" />
+      <WorkingDirectory ParameterType="System.String" Required="true" />
+      <EnvironmentVariables ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Diagnostics"/>
+      <Using Namespace="System.Threading"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+
+Log.LogMessage(MessageImportance.High, "Hello from an inline task created by Roslyn!");
+Log.LogMessageFromText($"Parameter1: '{Command}'", MessageImportance.High);
+Log.LogMessageFromText($"Parameter2: '{Arguments}'", MessageImportance.High);
+Log.LogMessageFromText($"{WorkingDirectory}\\{Command}", MessageImportance.High);
+System.Environment.SetEnvironmentVariable("TAILWIND_MODE", EnvironmentVariables, EnvironmentVariableTarget.User);
+ProcessStartInfo startInfo = new ProcessStartInfo(Command);
+startInfo.Arguments = Arguments;
+startInfo.WorkingDirectory = WorkingDirectory;
+startInfo.UseShellExecute = true;
+startInfo.CreateNoWindow = false;
+startInfo.WindowStyle = ProcessWindowStyle.Normal;
+int id = Process.Start(startInfo).Id;
+Log.LogMessageFromText($"The process is: {id}", MessageImportance.High);
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
 </Project>
