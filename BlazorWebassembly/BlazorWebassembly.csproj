@@ -14,13 +14,21 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.6.21355.2" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="NpmInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
-    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take serveral minutes..." />
-    <Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true" />
+  <!-- If package-lock.json is not exists, perform an NPM install -->
+  <Target Name="NpmInstall" BeforeTargets="CoreBuild" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json')">
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)\" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true"/>
   </Target>
 
-  <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="NpmInstall">
+  <!-- If package-lock.json has changed, perform an NPM clean install -->
+  <Target Name="NpmCleanInstall" BeforeTargets="CoreBuild" DependsOnTargets="NpmInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec Command="npm ci --also=dev" WorkingDirectory="$(MSBuildProjectDirectory)\" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="NpmCleanInstall">
     <Message Importance="high" Text="Building scoped css..." />
     <Exec Command="npx postcss %22@(_ScopedCssOutputs, '%22 %22')%22 --replace" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
   </Target>
