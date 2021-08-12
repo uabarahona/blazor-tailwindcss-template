@@ -23,8 +23,8 @@
 
   <!-- If node_modules is not exists, perform an NPM clean install -->
   <Target Name="NodeModulesInstall" BeforeTargets="CoreBuild" Condition="!Exists('$(MSBuildProjectDirectory)\node_modules')">
-    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)\" />
+    <Message Importance="high" Text="Restoring node_modules using 'npm'. This may take several minutes..." />
+    <Exec Command="npm ci --also=dev" WorkingDirectory="$(MSBuildProjectDirectory)\" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
