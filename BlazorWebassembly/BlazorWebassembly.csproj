@@ -10,38 +10,47 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.6.21355.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.6.21355.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.7.21378.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.7.21378.6" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- If package-lock.json is not exists, perform an NPM install -->
-  <Target Name="NpmInstall" BeforeTargets="CoreBuild" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json')">
+  <Target Name="DebugEnsureNodeEnv" Condition="!Exists('$(MSBuildProjectDirectory)\node_modules')">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+  </Target>
+
+  <!-- If package-lock.json does not exists, perform an NPM install -->
+  <Target Name="NpmInstall" AfterTargets="DebugEnsureNodeEnv" Condition="!Exists('$(MSBuildProjectDirectory)\package-lock.json')">
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec Command="npm i" WorkingDirectory="$(MSBuildProjectDirectory)\" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true"/>
   </Target>
 
-  <!-- If node_modules is not exists, perform an NPM clean install -->
-  <Target Name="NodeModulesInstall" BeforeTargets="CoreBuild" Condition="!Exists('$(MSBuildProjectDirectory)\node_modules')">
+  <!-- If node_modules does not exists, perform an NPM clean install -->
+  <Target Name="NodeModulesInstall" AfterTargets="DebugEnsureNodeEnv" Condition="!Exists('$(MSBuildProjectDirectory)\node_modules')">
     <Message Importance="high" Text="Restoring node_modules using 'npm'. This may take several minutes..." />
     <Exec Command="npm ci --also=dev" WorkingDirectory="$(MSBuildProjectDirectory)\" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
   <!-- If package-lock.json has changed, perform an NPM clean install -->
-  <Target Name="NpmCleanInstall" BeforeTargets="CoreBuild" DependsOnTargets="NodeModulesInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
+  <Target Name="NpmCleanInstall" AfterTargets="DebugEnsureNodeEnv" DependsOnTargets="NodeModulesInstall" Inputs="$(MSBuildProjectDirectory)\package-lock.json" Outputs="$(BaseIntermediateOutputPath)package-lock.json">
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec Command="npm ci --also=dev" WorkingDirectory="$(MSBuildProjectDirectory)\" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\package-lock.json" DestinationFolder="$(BaseIntermediateOutputPath)" SkipUnchangedFiles="true"/>
   </Target>
 
-  <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="NpmCleanInstall">
+  <Target Name="PostScopedCssCompile" AfterTargets="_GenerateScopedCssFiles" DependsOnTargets="DebugEnsureNodeEnv">
     <Message Importance="high" Text="Building scoped css..." />
     <Exec Command="npx postcss %22@(_ScopedCssOutputs, '%22 %22')%22 --replace" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="TAILWIND_MODE=build" />
   </Target>
 
   <Target Name="PostStylesCssCompile" AfterTargets="Build">
-    <Message Importance="high" Text="Building sytles css" />
+    <Message Importance="high" Text="BUG: If you are on running only dotnet build, a process is going to appear as a new console, feel free to close it." />
+    <Message Importance="high" Text="Watching sytles css.." />
     <ExecAsync  Command="npx" Arguments="postcss @(styles, ' ') --base . --dir $(OutDir)wwwroot --watch --verbose --poll" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="watch" />
   </Target>
 
@@ -60,11 +69,6 @@
       <Using Namespace="System.Threading"/>
       <Code Type="Fragment" Language="cs">
 <![CDATA[
-
-Log.LogMessage(MessageImportance.High, "Hello from an inline task created by Roslyn!");
-Log.LogMessageFromText($"Parameter1: '{Command}'", MessageImportance.High);
-Log.LogMessageFromText($"Parameter2: '{Arguments}'", MessageImportance.High);
-Log.LogMessageFromText($"{WorkingDirectory}\\{Command}", MessageImportance.High);
 System.Environment.SetEnvironmentVariable("TAILWIND_MODE", EnvironmentVariables, EnvironmentVariableTarget.User);
 ProcessStartInfo startInfo = new ProcessStartInfo(Command);
 startInfo.Arguments = Arguments;
