@@ -14,7 +14,7 @@ The main goal of this template is to provide an clean integration with tailwindc
 ⚠️ I have not tested using hot-reload on VS, so this currently works using `dotnet-watch`
 
 # Features
-- [x] css-isolation works with tailwindcss
+- [x] css-isolation works with tailwindcss and @apply directives
 - [x] hot-reload considers tailwind compilation
 - [x] `<styles>` gets compiled and copied over `wwwroot` without unused styles when release mode
 - [x] change tailwindcss to use JIT compiler
