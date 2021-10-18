@@ -11,6 +11,8 @@ https://user-images.githubusercontent.com/15148088/127200058-8e9a6d7f-1161-4a83-
 # Description
 The main goal of this template is to provide an clean integration with tailwindcss thus it will not modify anything from the official blazor template. Once integration is done there will be additional work to bring tailwindcss templates to blazor :D
 
+⚠️ I have not tested using hot-reload on VS, so this currently works using `dotnet-watch`
+
 # Features
 - [x] css-isolation works with tailwindcss
 - [x] hot-reload considers tailwind compilation
