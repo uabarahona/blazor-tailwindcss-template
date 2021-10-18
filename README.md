@@ -1,6 +1,6 @@
 <div align="center">
   <img height="60" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Blazor.png">
-  <img height="60" src="https://www.markusantonwolf.com/media/pages/blog/tailwind-css/265298487-1596675041/tailwind-css-logo.svg">
+  <img height="60" src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg">
   <h1>Blazor + Tailwind</h1>
 </div>
 
