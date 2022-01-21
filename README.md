@@ -1,5 +1,5 @@
 <div>
-ℹ️ A nuget package convering this use case has been on https://github.com/Practical-ASP-NET/Tailwind.Extensions.AspNetCore feel free to take a look.
+ℹ️ A nuget package convering this use case has been released on https://github.com/Practical-ASP-NET/Tailwind.Extensions.AspNetCore feel free to take a look.
 </div>
 
 </br>
