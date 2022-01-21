@@ -1,3 +1,14 @@
+<div>
+ℹ️ A nuget package convering this use case has been on https://github.com/Practical-ASP-NET/Tailwind.Extensions.AspNetCore feel free to take a look.
+</div>
+
+</br>
+</br>
+</br>
+</br>
+
+
+
 <div align="center">
   <img height="60" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Blazor.png">
   <img height="60" src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg">
